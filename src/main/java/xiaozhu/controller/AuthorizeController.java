@@ -1,5 +1,7 @@
 package xiaozhu.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -27,7 +29,9 @@ public class AuthorizeController {
 	
 	
 	@GetMapping("/callback")
-	public String callback(@RequestParam(name = "code") String code,@RequestParam(name="state") String state) {
+	public String callback(@RequestParam(name = "code") String code,
+						   @RequestParam(name="state") String state,
+						   HttpServletRequest request) {
 		AccessTokenDTO accessTokenDTO=new AccessTokenDTO();
 		accessTokenDTO.setClient_id(clientid);
 		System.out.println(clientid);
@@ -39,7 +43,13 @@ public class AuthorizeController {
 		accessTokenDTO.setState(state);
 		String accessToken = githubProvider.getAccessToken(accessTokenDTO);
 		GithubUser user = githubProvider.getUser(accessToken);
-		System.out.println(user);
-		return "index";
+		if(user!=null)
+		{
+			request.getSession().setAttribute("user", user);
+			return "redirect:/";
+		}
+		else {
+			return "redirect:/";
+		}
 	}
 }
