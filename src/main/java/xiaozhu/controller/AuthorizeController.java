@@ -1,5 +1,7 @@
 package xiaozhu.controller;
 
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import xiaozhu.dto.AccessTokenDTO;
 import xiaozhu.dto.GithubUser;
+import xiaozhu.mapper.UserMapper;
+import xiaozhu.model.User;
 import xiaozhu.provider.GithubProvider;
 
 @Controller
@@ -27,6 +31,8 @@ public class AuthorizeController {
 	@Value("${github.redirect.url}")
 	private String redirectUrl;
 	
+	@Autowired
+	UserMapper userMapper;
 	
 	@GetMapping("/callback")
 	public String callback(@RequestParam(name = "code") String code,
@@ -45,6 +51,13 @@ public class AuthorizeController {
 		GithubUser user = githubProvider.getUser(accessToken);
 		if(user!=null)
 		{
+			User user2=new User(); 
+			user2.setToken(UUID.randomUUID().toString());
+			user2.setAccountId(String.valueOf(user.getId()));
+			user2.setName(user.getName());
+			user2.setGmtCreate(System.currentTimeMillis());
+			user2.setGmtModified(user2.getGmtCreate());
+			userMapper.insert(user2);
 			request.getSession().setAttribute("user", user);
 			return "redirect:/";
 		}
