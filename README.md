@@ -9,7 +9,7 @@
 [Git](https://git-scm.com/download)
 
 ## 脚本
-...sql
+```sql
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
@@ -19,4 +19,4 @@ CREATE TABLE `user` (
   `account_id` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1
-...
+```

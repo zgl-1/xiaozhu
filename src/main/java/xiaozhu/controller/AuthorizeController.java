@@ -2,7 +2,9 @@ package xiaozhu.controller;
 
 import java.util.UUID;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +39,8 @@ public class AuthorizeController {
 	@GetMapping("/callback")
 	public String callback(@RequestParam(name = "code") String code,
 						   @RequestParam(name="state") String state,
-						   HttpServletRequest request) {
+						   HttpServletRequest request,
+						   HttpServletResponse response) {
 		AccessTokenDTO accessTokenDTO=new AccessTokenDTO();
 		accessTokenDTO.setClient_id(clientid);
 		System.out.println(clientid);
@@ -51,14 +54,15 @@ public class AuthorizeController {
 		GithubUser user = githubProvider.getUser(accessToken);
 		if(user!=null)
 		{
+			String token=UUID.randomUUID().toString();
 			User user2=new User(); 
-			user2.setToken(UUID.randomUUID().toString());
+			user2.setToken(token);
 			user2.setAccountId(String.valueOf(user.getId()));
 			user2.setName(user.getName());
 			user2.setGmtCreate(System.currentTimeMillis());
 			user2.setGmtModified(user2.getGmtCreate());
 			userMapper.insert(user2);
-			request.getSession().setAttribute("user", user);
+			response.addCookie(new Cookie("token", token));
 			return "redirect:/";
 		}
 		else {
