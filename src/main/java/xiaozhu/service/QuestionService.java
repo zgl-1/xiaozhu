@@ -7,7 +7,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ch.qos.logback.core.joran.util.beans.BeanUtil;
 import xiaozhu.dto.QuestionDto;
 import xiaozhu.mapper.QuestionMapper;
 import xiaozhu.mapper.UserMapper;
