@@ -22,7 +22,7 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">小猪生活</a>
+				<a class="navbar-brand" href="/">小猪生活</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -78,9 +78,9 @@
 							class="form-control" id="tag" name="tag" th:value="${tag}" placeholder="输入标签，以，隔开">
 					</div>
 					<div>
-						<div
-							class="alert alert-danger col-lg-9 col-md-12 col-sm--12 col-xs-12"
-							role="alert" th:text="${error}" th:if="${error!=null}"></div>
+						<div class="col-lg-9 col-md-12 col-sm--12 col-xs-12">
+							<div class="alert alert-danger col-lg-9 col-md-12 col-sm--12 col-xs-12" th:text="${error}" th:if="${error!=null}"></div>
+							</div>
 						<div class="col-lg-3 col-md-12 col-sm--12 col-xs-12">
 							<button type="submit" class="btn btn-success btn-publish">发布</button>
 						</div>
