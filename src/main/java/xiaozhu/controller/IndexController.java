@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import xiaozhu.dto.PaginationDto;
 import xiaozhu.dto.QuestionDto; 
 import xiaozhu.mapper.UserMapper; 
 import xiaozhu.model.User;
@@ -45,12 +46,9 @@ public class IndexController {
 				}
 			}
 		}
-		
-		
-		
-		
-		List<QuestionDto> list=questionService.list(page,size);
-		model.addAttribute("questions",list);
+		 
+		PaginationDto list=questionService.list(page,size);
+		model.addAttribute("pagination",list);
 		return "index";
 	}
 	
