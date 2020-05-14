@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import xiaozhu.dto.QuestionDto;
 import xiaozhu.model.Question;
 
 @Mapper
@@ -22,5 +23,8 @@ public interface QuestionMapper {
 	
 	@Select("select * from question where creator=#{userid} limit #{offset},#{size}")
 	List<Question> listByUser(@Param("userid")long userid, @Param("offset")Integer offset, @Param("size")Integer size);
+
+	@Select("select * from question where id=#{id}")
+	Question findById(@Param("id")Integer id);
 	
 }

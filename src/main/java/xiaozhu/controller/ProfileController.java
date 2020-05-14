@@ -29,20 +29,7 @@ public class ProfileController {
 			@RequestParam(name = "page", defaultValue = "1") Integer page,
 			@RequestParam(name = "size", defaultValue = "5") Integer size) {
 
-		User user = null;
-		Cookie[] cookies = request.getCookies();
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if ("token".equals(cookie.getName())) {
-					String token = cookie.getValue();
-					user = usermapper.findUserByToken(token);
-					if (user != null) {
-						request.getSession().setAttribute("user", user);
-					}
-					break;
-				}
-			}
-		}
+		User user = (User) request.getSession().getAttribute("user");
 		if (user == null) {
 			return "redirect:/";
 		}
