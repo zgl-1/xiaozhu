@@ -6,8 +6,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
-import xiaozhu.dto.QuestionDto;
 import xiaozhu.model.Question;
 
 @Mapper
@@ -25,6 +25,9 @@ public interface QuestionMapper {
 	List<Question> listByUser(@Param("userid")long userid, @Param("offset")Integer offset, @Param("size")Integer size);
 
 	@Select("select * from question where id=#{id}")
-	Question findById(@Param("id")Integer id);
+	Question findById(@Param("id")long id);
+
+	@Update("update question set title =#{title} ,description=#{description}, gmt_modified=#{gmtModified} ,tag=#{tag} where id =#{id}")
+	void update(Question question);
 	
 }

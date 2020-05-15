@@ -3,11 +3,11 @@
 <head>
 <title>小猪生活社区</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="stylesheet" href="css/bootstrap.min.css" />
-<link rel="stylesheet" href="css/community.css" />
-<link rel="stylesheet" href="css/bootstrap-theme.min.css" />
-<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/community.css" />
+<link rel="stylesheet" href="/css/bootstrap-theme.min.css" />
+<script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -20,6 +20,7 @@
 				</h2>
 				<hr>
 				<form action="/publish" method="post">
+				<input type="hidden" name="id" th:value="${id}">
 					<div class="form-group">
 						<label for="exampleInputEmail1">问题标题（简单扼要）</label> <input
 							type="text" class="form-control" name="title" th:value="${title}" id="title"

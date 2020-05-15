@@ -97,13 +97,25 @@ public class QuestionService {
 		return paginationDto;
 	}
 
-	public QuestionDto findById(Integer id) {
+	public QuestionDto findById(long id) {
 		Question question = questionMapper.findById(id);
 		User user = usermapper.findUserById(question.getCreator());
 		QuestionDto questionDto = new QuestionDto();
 		BeanUtils.copyProperties(question, questionDto);
 		questionDto.setUser(user);
 		return questionDto;
+	}
+
+	public void createOrUpdate(Question question) {
+		if(question.getId() == null)
+		{
+			question.setGmtCreate(System.currentTimeMillis());
+			question.setGmtModified(System.currentTimeMillis());
+			questionMapper.insert(question);
+		}else {
+			question.setGmtModified(System.currentTimeMillis());
+			questionMapper.update(question);
+		}
 	}
 
 }
