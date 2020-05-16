@@ -3,6 +3,7 @@ package xiaozhu.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import xiaozhu.dto.QuestionDto;
 import xiaozhu.mapper.QuestionMapper;
 import xiaozhu.mapper.UserMapper;
 import xiaozhu.model.Question;
+import xiaozhu.model.QuestionExample;
 import xiaozhu.model.User;
 
 @Service
@@ -24,7 +26,8 @@ public class QuestionService {
 	QuestionMapper questionMapper;
 
 	public PaginationDto list(Integer page, Integer size) {
-		Integer count = questionMapper.count();
+		
+		Integer count = (int)questionMapper.countByExample(new QuestionExample());
 		PaginationDto paginationDto = new PaginationDto();
 		Integer totalPage;
 		if (count % size == 0) {
@@ -44,11 +47,11 @@ public class QuestionService {
 		}
 		
 		Integer offset = size * (page - 1);
-		List<Question> list = questionMapper.list(offset, size);
+		List<Question> list = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset,size));
 		List<QuestionDto> questionDtos = new ArrayList<>();
 		
 		for (Question question : list) {
-			User user = usermapper.findUserById(question.getCreator());
+			User user = usermapper.selectByPrimaryKey(question.getCreator());
 			QuestionDto questionDto = new QuestionDto();
 			BeanUtils.copyProperties(question, questionDto);
 			questionDto.setUser(user);
@@ -61,7 +64,9 @@ public class QuestionService {
 	}
 	
 	public PaginationDto list(long userid,Integer page, Integer size) {
-		Integer count = questionMapper.count();
+		QuestionExample example=new QuestionExample();
+		example.createCriteria().andCreatorEqualTo(userid);
+		Integer count = (int)questionMapper.countByExample(example);
 		PaginationDto paginationDto = new PaginationDto();
 		Integer totalPage;
 		if (count % size == 0) {
@@ -81,11 +86,13 @@ public class QuestionService {
 		}
 		
 		Integer offset = size * (page - 1);
-		List<Question> list = questionMapper.listByUser(userid,offset, size);
+		QuestionExample questionExample=new QuestionExample();
+		questionExample.createCriteria().andCreatorEqualTo(userid);
+		List<Question> list = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset,size));
 		List<QuestionDto> questionDtos = new ArrayList<>();
 		
 		for (Question question : list) {
-			User user = usermapper.findUserById(question.getCreator());
+			User user = usermapper.selectByPrimaryKey(question.getCreator());
 			QuestionDto questionDto = new QuestionDto();
 			BeanUtils.copyProperties(question, questionDto);
 			questionDto.setUser(user);
@@ -98,8 +105,8 @@ public class QuestionService {
 	}
 
 	public QuestionDto findById(long id) {
-		Question question = questionMapper.findById(id);
-		User user = usermapper.findUserById(question.getCreator());
+		Question question = questionMapper.selectByPrimaryKey(id);
+		User user = usermapper.selectByPrimaryKey(question.getCreator());
 		QuestionDto questionDto = new QuestionDto();
 		BeanUtils.copyProperties(question, questionDto);
 		questionDto.setUser(user);
@@ -113,8 +120,15 @@ public class QuestionService {
 			question.setGmtModified(System.currentTimeMillis());
 			questionMapper.insert(question);
 		}else {
+			Question question2=new Question();
+			question2.setGmtModified(System.currentTimeMillis());
+			question2.setTitle(question.getTitle());
+			question2.setDescription(question.getDescription());
+			question2.setTag(question.getTag());
 			question.setGmtModified(System.currentTimeMillis());
-			questionMapper.update(question);
+			QuestionExample questionExample=new QuestionExample();
+			questionExample.createCriteria().andIdEqualTo(question.getId());
+			questionMapper.updateByExampleSelective(question2, questionExample);
 		}
 	}
 

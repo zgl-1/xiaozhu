@@ -1,5 +1,7 @@
 package xiaozhu.interceptor;
 
+import java.util.List;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import xiaozhu.mapper.UserMapper;
 import xiaozhu.model.User;
+import xiaozhu.model.UserExample;
 
 @Service
 public class SessionInterceptor implements HandlerInterceptor {
@@ -27,10 +30,12 @@ public class SessionInterceptor implements HandlerInterceptor {
 				if("token".equals(cookie.getName()))
 				{
 					String token=cookie.getValue();
-					User user =usermapper.findUserByToken(token);
-					if(user!=null)
+					UserExample example=new UserExample();
+					example.createCriteria().andTokenEqualTo(token);
+					List<User> selectByExample = usermapper.selectByExample(example);
+					if(selectByExample.size()!=0)
 					{
-						request.getSession().setAttribute("user", user);
+						request.getSession().setAttribute("user", selectByExample.get(0));
 					}
 					break;
 				}
