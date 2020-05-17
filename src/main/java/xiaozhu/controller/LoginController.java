@@ -1,22 +1,16 @@
 package xiaozhu.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class LoginController {
-	@GetMapping("/login")
-	public String GetLogin()
+	@GetMapping("/removeLogin")
+	public String removeLogin(HttpServletRequest request)
 	{
-		return "login";
-	}
-	
-	@PostMapping("/postLogin")
-	public String PostLogin(@RequestParam(name = "username") String username,
-							@RequestParam(name = "password") String password)
-	{
-		return "index";
+		request.getSession().removeAttribute("user");
+		return "redirect:/";
 	}
 }

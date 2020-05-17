@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 
 import xiaozhu.dto.PaginationDto;
 import xiaozhu.dto.QuestionDto;
+import xiaozhu.exception.CustomErrorEnum;
+import xiaozhu.exception.CustomException;
 import xiaozhu.mapper.QuestionMapper;
+import xiaozhu.mapper.QuestionMapperEx;
 import xiaozhu.mapper.UserMapper;
 import xiaozhu.model.Question;
 import xiaozhu.model.QuestionExample;
@@ -24,6 +27,9 @@ public class QuestionService {
 
 	@Autowired
 	QuestionMapper questionMapper;
+	
+	@Autowired
+	QuestionMapperEx questionMapperEx;
 
 	public PaginationDto list(Integer page, Integer size) {
 		
@@ -106,6 +112,11 @@ public class QuestionService {
 
 	public QuestionDto findById(long id) {
 		Question question = questionMapper.selectByPrimaryKey(id);
+		
+		if(question==null)
+		{
+			throw new CustomException(CustomErrorEnum.QUESTION_NOT_FOUND);
+		}
 		User user = usermapper.selectByPrimaryKey(question.getCreator());
 		QuestionDto questionDto = new QuestionDto();
 		BeanUtils.copyProperties(question, questionDto);
@@ -128,8 +139,20 @@ public class QuestionService {
 			question.setGmtModified(System.currentTimeMillis());
 			QuestionExample questionExample=new QuestionExample();
 			questionExample.createCriteria().andIdEqualTo(question.getId());
-			questionMapper.updateByExampleSelective(question2, questionExample);
+			int updateByExampleSelective = questionMapper.updateByExampleSelective(question2, questionExample);
+			if(updateByExampleSelective!=1) {
+				throw new CustomException(CustomErrorEnum.QUESTION_NOT_FOUND);
+			}
 		}
+	}
+
+	public void incView(long id) {
+		// TODO Auto-generated method stub
+		Question question=new Question();
+		question.setId(id);
+		question.setViewCount(1);
+		
+		questionMapperEx.incView(question);
 	}
 
 }
