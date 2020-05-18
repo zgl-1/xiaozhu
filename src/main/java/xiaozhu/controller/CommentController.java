@@ -1,6 +1,7 @@
 package xiaozhu.controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import xiaozhu.dto.CommentDto;
 import xiaozhu.dto.ResultDto;
+import xiaozhu.exception.CustomErrorEnum;
 import xiaozhu.model.Comment;
 import xiaozhu.model.User;
 import xiaozhu.service.CommentService;
@@ -29,10 +31,10 @@ public class CommentController {
 
 		User user = (User) request.getSession().getAttribute("user");
 		if (user == null) {
-			return ResultDto.errorOf(2002, "未登录，不能进行评论，请先登录");
+			return ResultDto.errorOf(CustomErrorEnum.NO_LOGIN);
 		}
 		Comment comment = new Comment();
-		comment.setParentId(commentDto.getParent());
+		comment.setParentId(commentDto.getParentId());
 		comment.setContent(commentDto.getContent());
 		comment.setType(commentDto.getType());
 		comment.setGmtCreate(System.currentTimeMillis());
@@ -40,8 +42,6 @@ public class CommentController {
 		comment.setCommentator(1L);
 		comment.setLikeCount(0l);
 		commentService.insert(comment);
-		HashMap<Object, Object> hashMap = new HashMap<>();
-		hashMap.put("message", "成功");
-		return hashMap;
+		return ResultDto.okOf();
 	}
 }

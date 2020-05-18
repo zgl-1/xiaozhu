@@ -6,7 +6,11 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 
-import okhttp3.*;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import xiaozhu.dto.AccessTokenDTO;
 import xiaozhu.dto.GithubUser;
 
@@ -42,7 +46,6 @@ public class GithubProvider {
 			GithubUser githubUser=JSON.parseObject(string,GithubUser.class);
 			return githubUser;
 		} catch (IOException e) { 
-			e.printStackTrace();
 		}
 		return null;
 	}

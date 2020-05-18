@@ -14,6 +14,8 @@ public class CommentService {
 		if(comment.getParentId()==null ||comment.getParentId()==0) {
 			throw new CustomException(CustomErrorEnum.TARGET_PARAM_NOT_FOUND);
 		}
+		
+		
 	}
 
 }
