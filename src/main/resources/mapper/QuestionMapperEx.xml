@@ -24,4 +24,11 @@
       view_count = view_count+#{viewCount,jdbcType=INTEGER}
       where id=#{id,jdbcType=BIGINT}
   </update>
+   <update id="incComment" parameterType="xiaozhu.model.Question">
+   
+    update question
+    set 
+      comment_Count = comment_Count+#{commentCount,jdbcType=INTEGER}
+      where id=#{id,jdbcType=BIGINT}
+  </update>
 </mapper>

@@ -9,9 +9,24 @@
 <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
-<body>
-  <div th:insert="~{navigation :: nav}"></div>
+<script type="application/javascript">
 	
+	window.onload=function(){
+		debugger;
+		var closable=window.localStorage.getItem("closable");
+		if(closable=="true"){
+				window.close();
+				window.localStorage.removeItem("closable");
+			}
+	}
+
+
+
+
+</script>
+<body>
+	<div th:insert="~{navigation :: nav}"></div>
+
 	<div class="container-fluid main">
 		<div class="row">
 			<div class="col-lg-9 col-md-12 col-sm--12 col-xs-12">
@@ -26,8 +41,9 @@
 						</a>
 					</div>
 					<div class="media-body">
-						<h4 class="media-heading" >
-							<a th:text="${question.title}" th:href="@{'../question/'+${question.id}}"></a>
+						<h4 class="media-heading">
+							<a th:text="${question.title}"
+								th:href="@{'../question/'+${question.id}}"></a>
 						</h4>
 						<span th:text="${question.description}"></span><br> <span
 							class="text-desc"><span th:text="${question.commentCount}"></span>个回复,
