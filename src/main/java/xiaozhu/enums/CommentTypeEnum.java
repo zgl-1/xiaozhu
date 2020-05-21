@@ -1,7 +1,5 @@
 package xiaozhu.enums;
 
-import ch.qos.logback.core.subst.Token.Type;
-
 public enum CommentTypeEnum {
 	QUESTION(1),
 	COMMENT(2);

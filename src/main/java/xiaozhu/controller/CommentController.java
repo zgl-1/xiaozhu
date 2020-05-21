@@ -2,6 +2,7 @@ package xiaozhu.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import xiaozhu.dto.CommentDto;
+import xiaozhu.dto.CommentCreateDto;
 import xiaozhu.dto.ResultDto;
 import xiaozhu.exception.CustomErrorEnum;
+import xiaozhu.exception.CustomException;
 import xiaozhu.model.Comment;
 import xiaozhu.model.User;
 import xiaozhu.service.CommentService;
@@ -24,11 +26,16 @@ public class CommentController {
 
 	@ResponseBody
 	@RequestMapping(value = "comment", method = RequestMethod.POST)
-	public Object post(@RequestBody CommentDto commentDto, HttpServletRequest request) {
+	public Object post(@RequestBody CommentCreateDto commentDto, HttpServletRequest request) {
 
 		User user = (User) request.getSession().getAttribute("user");
 		if (user == null) {
 			return ResultDto.errorOf(CustomErrorEnum.NO_LOGIN);
+		}
+		
+		if(commentDto==null||StringUtils.isBlank(commentDto.getContent()))
+		{
+			throw new  CustomException(CustomErrorEnum.COMENT_IS_EMPTY);
 		}
 		Comment comment = new Comment();
 		comment.setParentId(commentDto.getParentId());
@@ -36,7 +43,7 @@ public class CommentController {
 		comment.setType(commentDto.getType());
 		comment.setGmtCreate(System.currentTimeMillis());
 		comment.setGmtModified(System.currentTimeMillis());
-		comment.setCommentator(1L);
+		comment.setCommentator(user.getId());
 		comment.setLikeCount(0l);
 		commentService.insert(comment);
 		return ResultDto.okOf();

@@ -1,52 +1,95 @@
-body{
-	background-color:#efefef
-}
-.main{
-	background-color:white;
-	margin:30px;
-}
-.btn-publish{
-	float:right;
-	margin-bottom:15px;
+body {
+	background-color: #efefef
 }
 
-.media-object{
+.main {
+	background-color: white;
+	margin: 30px;
+}
+
+.btn-publish {
+	float: right;
+	margin-bottom: 15px;
+}
+
+.media-object {
 	width: 50px;
-    height: 50px;
+	height: 50px;
 }
 
-.media-body{
-	padding-top:10px;
+.media-body {
+	padding-top: 10px;
 }
 
-.text-desc{
-	font-size:12px;
-	font-weight:normal;
-	color:#999;
+.text-desc {
+	font-size: 12px;
+	font-weight: normal;
+	color: #999;
 }
 
-.profile .section{
-	margin-top:15px;
+.profile .section {
+	margin-top: 15px;
 }
 
-.community-menu{
-	color:#999;
-	font-size:13px;
+.community-menu {
+	color: #999;
+	font-size: 13px;
+	display: block;
+	margin-bottom: 15px;
 }
 
-.jumbotron{
-	margin:50px;
+.jumbotron {
+	margin: 50px;
 }
 
-.comment{
-	margin:10px 0;
+.comment {
+	margin: 10px 0;
 }
 
-.btn-comment{
-	float:right;
-	margin-bottom:10px;
+.btn-comment {
+	float: right;
+	margin-bottom: 10px;
 }
 
+.sub-comments {
+	margin-top: 10px;
+	border: 1px solid #eee;
+	padding-top: 15px;
+	border-radius: 5px;
+	margin-bottom: 15px;
+}
 
+.sub-comments .btn{
+	 margin: 15px 0;
+}
 
+   
+.menu {
+	color: #999;
+	margin-top: 5px;
+}
 
+.menu .icon {
+	margin-right: 6px;
+	font-size: 15px;
+	cursor: pointer;
+}
+
+.menu .active {
+	color: #499ef3;
+}
+
+}
+.menu .icon:hover {
+	color: #499ef3;
+}
+
+.comments {
+	border-bottom: 1px solid #eee;
+	margin-bottom: 15px;
+	padding-bottom: 5px;
+}
+
+.comment-sp {
+	margin-top: 0px;
+}

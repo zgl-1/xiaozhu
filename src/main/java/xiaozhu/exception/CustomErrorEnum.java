@@ -6,7 +6,8 @@ public enum CustomErrorEnum implements ICustomErrorCode {
 	NO_LOGIN(2003,"未登录，不能进行评论，请先登录！"),
 	SYS_ERROR(2004,"你的服务器已经冒烟了！"),
 	TYPE_PARAM_WRONG(2005,"评论类型错误或不存在！"),
-	COMMENT_NOT_FOUND(2005,"回复的评论不存在了，要不要换一个试试！");
+	COMMENT_NOT_FOUND(2005,"回复的评论不存在了，要不要换一个试试！"),
+	COMENT_IS_EMPTY(2005,"输入内容不为空！");
 
 	private String messgae;
 	private Integer code;
