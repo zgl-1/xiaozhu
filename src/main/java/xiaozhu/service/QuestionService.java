@@ -53,7 +53,9 @@ public class QuestionService {
 		}
 		
 		Integer offset = size * (page - 1);
-		List<Question> list = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset,size));
+		QuestionExample questionExample =new QuestionExample();
+		questionExample.setOrderByClause("gmt_create desc");
+		List<Question> list = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset,size));
 		List<QuestionDto> questionDtos = new ArrayList<>();
 		
 		for (Question question : list) {

@@ -53,7 +53,7 @@ public class CommentService {
 
 		if (comment.getType() == CommentTypeEnum.COMMENT.getType()) {
 			// 回复评论
-			Comment selectByPrimaryKey = commentMapper.selectByPrimaryKey(comment.getId());
+			Comment selectByPrimaryKey = commentMapper.selectByPrimaryKey(comment.getParentId());
 			if (selectByPrimaryKey == null) {
 				throw new CustomException(CustomErrorEnum.TYPE_PARAM_WRONG);
 			}
@@ -70,10 +70,10 @@ public class CommentService {
 		}
 	}
 
-	public List<CommentDto> listByQuestionId(Long id) {
+	public List<CommentDto> listByQuestionId(Long id,Integer type) {
 		// TODO Auto-generated method stub
 		CommentExample example=new CommentExample();
-		example.createCriteria().andParentIdEqualTo(id).andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+		example.createCriteria().andParentIdEqualTo(id).andTypeEqualTo(type);
 		example.setOrderByClause("gmt_create desc");
 		List<Comment> comments = commentMapper.selectByExample(example);
 		if(comments.size()==0)

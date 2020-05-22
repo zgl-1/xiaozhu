@@ -6,7 +6,11 @@
 function post() {
 	var id = $("#question_id").val();
 	var content = $("#content").val();
+	comment2target(id, 1, content);
 
+}
+
+function comment2target(targetId, type, content) {
 	if (!content) {
 		alert("不能回复空内容！");
 		return;
@@ -18,9 +22,9 @@ function post() {
 				url : "/comment",
 				contentType : "application/json",
 				data : JSON.stringify({
-					"parentId" : id,
+					"parentId" : targetId,
 					"content" : content,
-					"type" : 1
+					"type" : type
 				}),
 				success : function(response) {
 					if (response.code == 200) {
@@ -43,6 +47,12 @@ function post() {
 			});
 }
 
+function comment(e) {
+	var id = e.getAttribute("data-id");
+	var content = $("#input-" + id).val();
+	comment2target(id, 2, content);
+}
+
 /*******************************************************************************
  * 二级评论
  * 
@@ -51,18 +61,32 @@ function post() {
 function coll(e) {
 	var id = e.getAttribute("data-id");
 	var comments = $("#comment-" + id);
-	var collapse=e.getAttribute("data-collapse");
-	if(collapse){
+	var collapse = e.getAttribute("data-collapse");
+	if (collapse) {
 		comments.removeClass("in");
 		e.removeAttribute("data-collapse");
 		e.classList.remove("active");
-	}else{
-		//展开二级评论
+	} else {
+
+		$.getJSON("/comment/" + id, function(data) {
+			console.log(data);
+			/*var commentBody = $("#comment-body-" + id);
+
+			var items = [];
+			$.each(data.data, function(key, val) {
+				items.push("<li id='" + key + "'>" + val + "</li>");
+			});
+			$("<ul/>", {
+				"class" : "my-new-list",
+				html : items.join("")
+			}).appendTo("body");*/
+		});
+
+		// 展开二级评论
 		comments.addClass("in");
-		//标记二级评论展开
+		// 标记二级评论展开
 		e.setAttribute("data-collapse", "in");
 		e.classList.add("active");
 	}
-	
-	
+
 }
