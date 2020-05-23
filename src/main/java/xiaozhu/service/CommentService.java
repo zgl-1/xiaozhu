@@ -16,6 +16,7 @@ import xiaozhu.enums.CommentTypeEnum;
 import xiaozhu.exception.CustomErrorEnum;
 import xiaozhu.exception.CustomException;
 import xiaozhu.mapper.CommentMapper;
+import xiaozhu.mapper.CommentMapperEx;
 import xiaozhu.mapper.QuestionMapper;
 import xiaozhu.mapper.QuestionMapperEx;
 import xiaozhu.mapper.UserMapper;
@@ -35,10 +36,13 @@ public class CommentService {
 	QuestionMapper questionMapper;
 
 	@Autowired
-	UserMapper	userMapper;
-	
+	UserMapper userMapper;
+
 	@Autowired
 	QuestionMapperEx questionMapperEx;
+
+	@Autowired
+	CommentMapperEx commentMapperEx;
 
 	@Transactional
 	public void insert(Comment comment) {
@@ -58,6 +62,13 @@ public class CommentService {
 				throw new CustomException(CustomErrorEnum.TYPE_PARAM_WRONG);
 			}
 			commentMapper.insert(comment);
+			
+			//增加评论数
+			Comment parentComment = new Comment();
+			parentComment.setId(comment.getParentId());
+			parentComment.setCommentCount(1);
+			commentMapperEx.incCommentCount(parentComment);
+
 		} else {
 			// 回复问题
 			Question selectByPrimaryKey = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -70,36 +81,34 @@ public class CommentService {
 		}
 	}
 
-	public List<CommentDto> listByQuestionId(Long id,Integer type) {
+	public List<CommentDto> listByQuestionId(Long id, Integer type) {
 		// TODO Auto-generated method stub
-		CommentExample example=new CommentExample();
+		CommentExample example = new CommentExample();
 		example.createCriteria().andParentIdEqualTo(id).andTypeEqualTo(type);
 		example.setOrderByClause("gmt_create desc");
 		List<Comment> comments = commentMapper.selectByExample(example);
-		if(comments.size()==0)
-		{
+		if (comments.size() == 0) {
 			return new ArrayList<>();
 		}
-		//获取去重的评论人
-		Set<Long> commentators = comments.stream().map(comment->comment.getCommentator()).collect(Collectors.toSet());
-		List<Long> userIdList=new ArrayList<Long>();
+		// 获取去重的评论人
+		Set<Long> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
+		List<Long> userIdList = new ArrayList<Long>();
 		userIdList.addAll(commentators);
-		
-		//获取评论人并转换为map
-		UserExample userExample =new UserExample();
+
+		// 获取评论人并转换为map
+		UserExample userExample = new UserExample();
 		userExample.createCriteria().andIdIn(userIdList);
 		List<User> users = userMapper.selectByExample(userExample);
-		Map<Long, User> collect = users.stream().collect(Collectors.toMap(user->user.getId(), user->user));
-		
-		//转化comment 为commentDto
-		List<CommentDto> collect2 = comments.stream().map(comment->
-		{
-			CommentDto commentDto=new CommentDto();
+		Map<Long, User> collect = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
+
+		// 转化comment 为commentDto
+		List<CommentDto> collect2 = comments.stream().map(comment -> {
+			CommentDto commentDto = new CommentDto();
 			BeanUtils.copyProperties(comment, commentDto);
 			commentDto.setUser(collect.get(comment.getCommentator()));
 			return commentDto;
 		}).collect(Collectors.toList());
-		
+
 		return collect2;
 	}
 
