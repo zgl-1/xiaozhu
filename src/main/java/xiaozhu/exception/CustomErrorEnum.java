@@ -7,7 +7,9 @@ public enum CustomErrorEnum implements ICustomErrorCode {
 	SYS_ERROR(2004,"你的服务器已经冒烟了！"),
 	TYPE_PARAM_WRONG(2005,"评论类型错误或不存在！"),
 	COMMENT_NOT_FOUND(2005,"回复的评论不存在了，要不要换一个试试！"),
-	COMENT_IS_EMPTY(2005,"输入内容不为空！");
+	COMENT_IS_EMPTY(2005,"输入内容不为空！"),
+	READ_NOTIFICATION_FAIL(2006,"你这是在读别人的信息呢！"),
+	NOTIFICATION_NOT_FOUND(2007,"消息不在了！");
 
 	private String messgae;
 	private Integer code;

@@ -1,8 +1,11 @@
 package xiaozhu.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +68,7 @@ public class QuestionService {
 			questionDto.setUser(user);
 			questionDtos.add(questionDto);
 		}
-		paginationDto.setQuestions(questionDtos);
+		paginationDto.setData(questionDtos);
 
 		
 		return paginationDto;
@@ -106,7 +109,7 @@ public class QuestionService {
 			questionDto.setUser(user);
 			questionDtos.add(questionDto);
 		}
-		paginationDto.setQuestions(questionDtos);
+		paginationDto.setData(questionDtos);
 
 		
 		return paginationDto;
@@ -158,6 +161,25 @@ public class QuestionService {
 		question.setViewCount(1);
 		
 		questionMapperEx.incView(question);
+	}
+
+	public List<QuestionDto> selectRelated(QuestionDto questionDto) {
+		if(StringUtils.isBlank(questionDto.getTag()))
+		{
+			return new ArrayList<QuestionDto>();
+		}
+		String[] tagSplit = StringUtils.split(questionDto.getTag(),"，");
+		String collect = Arrays.stream(tagSplit).collect(Collectors.joining("|"));
+		Question question = new Question();
+		question.setId(questionDto.getId());
+		question.setTag(collect);
+		List<Question> questions = questionMapperEx.selectRelated(question);
+		List<QuestionDto> questionDtos = questions.stream().map(q->{
+			QuestionDto questionDt=new QuestionDto();
+			BeanUtils.copyProperties(q, questionDt);
+			return questionDt;
+		}).collect(Collectors.toList());
+		return questionDtos;
 	}
 
 }
