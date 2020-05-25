@@ -1,0 +1,21 @@
+package xiaozhu.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import xiaozhu.dto.FileDto;
+
+@Controller
+public class FileController {
+
+	@ResponseBody
+	@RequestMapping("/file/upload")
+	public FileDto upload() {
+		FileDto fileDto=new FileDto();
+		fileDto.setSuccess(1);
+		fileDto.setUrl("/images/gg.jpg");
+		
+		return fileDto;
+	}
+}

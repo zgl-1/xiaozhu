@@ -14,11 +14,15 @@ import org.springframework.web.servlet.ModelAndView;
 import xiaozhu.mapper.UserMapper;
 import xiaozhu.model.User;
 import xiaozhu.model.UserExample;
+import xiaozhu.service.NotificationService;
 
 @Service
 public class SessionInterceptor implements HandlerInterceptor {
 	@Autowired
 	private UserMapper usermapper;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -32,10 +36,12 @@ public class SessionInterceptor implements HandlerInterceptor {
 					String token=cookie.getValue();
 					UserExample example=new UserExample();
 					example.createCriteria().andTokenEqualTo(token);
-					List<User> selectByExample = usermapper.selectByExample(example);
-					if(selectByExample.size()!=0)
+					List<User> users = usermapper.selectByExample(example);
+					if(users.size()!=0)
 					{
-						request.getSession().setAttribute("user", selectByExample.get(0));
+						request.getSession().setAttribute("user", users.get(0));
+						Long unreadCount=notificationService.unreadCount(users.get(0).getId());
+						request.getSession().setAttribute("unreadCount", unreadCount);
 					}
 					break;
 				}
