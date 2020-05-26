@@ -9,7 +9,8 @@ public enum CustomErrorEnum implements ICustomErrorCode {
 	COMMENT_NOT_FOUND(2005,"回复的评论不存在了，要不要换一个试试！"),
 	COMENT_IS_EMPTY(2005,"输入内容不为空！"),
 	READ_NOTIFICATION_FAIL(2006,"你这是在读别人的信息呢！"),
-	NOTIFICATION_NOT_FOUND(2007,"消息不在了！");
+	NOTIFICATION_NOT_FOUND(2007,"消息不在了！"),
+	FILE_UPLOAD_FAIL(2008,"图片上传失败！");
 
 	private String messgae;
 	private Integer code;

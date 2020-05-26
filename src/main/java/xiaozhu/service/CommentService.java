@@ -103,6 +103,10 @@ public class CommentService {
 
 	private void createNotify(Comment comment, Long Commentator, NotificationTypeEnum notificationTypeEnum,
 			String notifierName, String outerTitle,Long outerId) {
+		if(Commentator==comment.getCommentator())
+		{
+			return;
+		}
 		Notification notification = new Notification();
 		notification.setGmtCreater(System.currentTimeMillis());
 		notification.setType(notificationTypeEnum.getType());
