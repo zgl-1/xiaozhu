@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.extern.slf4j.Slf4j;
 import xiaozhu.dto.AccessTokenDTO;
 import xiaozhu.dto.GithubUser;
 import xiaozhu.mapper.UserMapper;
@@ -20,6 +21,7 @@ import xiaozhu.provider.GithubProvider;
 import xiaozhu.service.UserService;
 
 @Controller
+@Slf4j
 public class AuthorizeController {
 	@Autowired
 	private UserService usersevice;
@@ -61,6 +63,7 @@ public class AuthorizeController {
 			response.addCookie(new Cookie("token", token));
 			return "redirect:/";
 		} else {
+			log.error("callback get github error ,{}",user);
 			return "redirect:/";
 		}
 	}

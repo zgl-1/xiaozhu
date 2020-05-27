@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import xiaozhu.dto.PaginationDto;
 import xiaozhu.dto.QuestionDto;
+import xiaozhu.dto.QuestionQueryDto;
 import xiaozhu.exception.CustomErrorEnum;
 import xiaozhu.exception.CustomException;
 import xiaozhu.mapper.QuestionMapper;
@@ -34,9 +35,22 @@ public class QuestionService {
 	@Autowired
 	QuestionMapperEx questionMapperEx;
 
-	public PaginationDto list(Integer page, Integer size) {
+	public PaginationDto list(String search,Integer page, Integer size) {
 		
-		Integer count = (int)questionMapper.countByExample(new QuestionExample());
+		if(StringUtils.isNotBlank(search))
+		{
+			String[] tagSplit = StringUtils.split(search," ");
+			search = Arrays.stream(tagSplit).collect(Collectors.joining("|"));
+		}
+		
+		
+		
+		
+		QuestionQueryDto questionQueryDto = new QuestionQueryDto();
+		questionQueryDto.setSearch(search);
+		
+		
+		Integer count = questionMapperEx.countBySearch(questionQueryDto);
 		PaginationDto paginationDto = new PaginationDto();
 		Integer totalPage;
 		if (count % size == 0) {
@@ -56,9 +70,9 @@ public class QuestionService {
 		}
 		
 		Integer offset = size * (page - 1);
-		QuestionExample questionExample =new QuestionExample();
-		questionExample.setOrderByClause("gmt_create desc");
-		List<Question> list = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(offset,size));
+		questionQueryDto.setPage(offset);
+		questionQueryDto.setSize(size);
+		List<Question> list = questionMapperEx.selectBySearch(questionQueryDto);
 		List<QuestionDto> questionDtos = new ArrayList<>();
 		
 		for (Question question : list) {
