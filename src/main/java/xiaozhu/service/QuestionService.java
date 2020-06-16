@@ -9,8 +9,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import xiaozhu.dto.PaginationDto;
 import xiaozhu.dto.QuestionDto;
 import xiaozhu.dto.QuestionQueryDto;
@@ -36,7 +38,11 @@ public class QuestionService {
 	QuestionMapperEx questionMapperEx;
 
 	public PaginationDto list(String search,Integer page, Integer size) {
-		
+		if(search=="")
+		{
+			search=null;
+		}
+
 		if(StringUtils.isNotBlank(search))
 		{
 			String[] tagSplit = StringUtils.split(search," ");
@@ -129,6 +135,7 @@ public class QuestionService {
 		return paginationDto;
 	}
 
+	//@Cacheable(value = "question")
 	public QuestionDto findById(long id) {
 		Question question = questionMapper.selectByPrimaryKey(id);
 		
