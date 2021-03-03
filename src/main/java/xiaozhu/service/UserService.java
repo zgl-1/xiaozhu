@@ -37,4 +37,12 @@ public class UserService {
 			userMapper.updateByExampleSelective(user3, userExample);
 		}
 	}
+
+	public void update(User user) {
+		userMapper.updateByPrimaryKey(user);
+	}
+
+	public User selectUser() {
+		return userMapper.selectByPrimaryKey(12L);
+	}
 }

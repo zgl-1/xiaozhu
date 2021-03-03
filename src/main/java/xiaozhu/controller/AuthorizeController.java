@@ -67,4 +67,14 @@ public class AuthorizeController {
 			return "redirect:/";
 		}
 	}
+
+	@GetMapping("/login")
+	public String login(HttpServletResponse response) {
+        User user = usersevice.selectUser();
+        String token = UUID.randomUUID().toString();
+        user.setToken(token);
+        usersevice.update(user);
+        response.addCookie(new Cookie("token", token));
+        return "redirect:/";
+	}
 }
